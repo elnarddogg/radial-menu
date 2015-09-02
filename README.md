@@ -23,7 +23,7 @@ Adapts to the number of links you have in your menu.
 
 Configure the radius and the degrees to be used for the arc.
 
-    var m = new Menu(document.querySelector('nav'), {
+    var m = new RadialMenu(document.querySelector('nav'), {
       radius: 130,
       degrees: 90,
       offset: -90

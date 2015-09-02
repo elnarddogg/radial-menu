@@ -1,0 +1,27 @@
+{
+	"name": "radial-menu",
+	"version": "0.1.0",
+	"description": "Radial HTML menu inspired by Path for iOS and Android",
+	"main": [
+		"menu.js",
+		"style.css"
+	],
+	"keywords": [
+		"radial",
+		"menu",
+		"mobile",
+		"ui",
+		"path"
+	],
+	"homepage": "https://github.com/beaucollins/radial-menu",
+	"authors": [
+		"Robert Collins"
+	],
+	"license": "MIT",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test"
+	]
+}
