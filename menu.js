@@ -3,19 +3,21 @@ window.RadialMenu = (function() {
   function Menu(element, options){
     if(!options) options = {};
     options = {
-      size: options.size || 40,
+      size: options.size || 60,
       degrees: options.degrees || 90,
       offset: options.offset || -90,
       radius: options.radius || 150
     }
-
-    element.dataset.component = 'radial-menu';
     
-    this.node = element;
+    this.element = element;
     this.menu_items = element.querySelectorAll('li');
     this.button = element.querySelector('a');
     this.state = 'closed';
     this.animations = [];
+
+    element.dataset.component = 'radial-menu';
+    element.style.width = options.size + 'px';
+    element.style.height = options.size + 'px';
     
     var sheet = document.styleSheets[0];
     var degrees = Math.max(Math.min(360, options.degrees), 0);
@@ -41,6 +43,7 @@ window.RadialMenu = (function() {
         [65, "-webkit-transform: translate3d(" + (x*0.95) + "px, " + (y*0.95) + "px, 0px); -webkit-transition-timing-function:ease-in-out;"],
         [100, "-webkit-transform: translate3d(" + x + "px, " + y + "px, 0px);"]
       ];
+
       var rules_moz = [
         [0,"-moz-transform: translate(0px, 0px); -moz-transition-timing-function: ease-out;"],
         [(delay + 15), "-moz-transform: translate(0px, 0px);"],
@@ -49,12 +52,13 @@ window.RadialMenu = (function() {
         [100, "-moz-transform: translate(" + x + "px, " + y + "px);"]
       ];
       
-      
       var open = "", reverse = "", open_moz = "", reverse_moz = "";
+
       rules.forEach(function(rule){
         open += rule[0] + '% {' + rule[1] + "}\n";
         reverse = (100-rule[0]) + '% {' + rule[1] + " }\n" + reverse;
       }, this);
+
       rules_moz.forEach(function(rule){
         open_moz += rule[0] + '% {' + rule[1] + "}\n";
         reverse_moz = (100-rule[0]) + '% {' + rule[1] + " }\n" + reverse_moz;
@@ -74,18 +78,23 @@ window.RadialMenu = (function() {
       }
       
       var link = item.querySelector('a');
+      
       link.style.webkitTransition = '-webkit-transform 500ms ease-in-out';
       link.style.MozTransition = "-moz-transform 500ms ease-in-out";
+      link.style.fontSize = Math.round(options.size / 2) + 'px';
+      link.style.width = options.size + 'px';
+      link.style.height = options.size + 'px';
+      link.style.lineHeight = options.size + 'px';
+
       this.animations.push([item, guid+'open', guid+"close"]);
     });
     
     this.button.style.webkitTransition = "-webkit-transform 100ms linear";
     this.button.style.MozTransition = "-moz-transform 100ms linear";
-
     this.button.style.fontSize = Math.round(options.size / 2) + 'px';
     this.button.style.width = options.size + 'px';
     this.button.style.height = options.size + 'px';
-    this.button.style.borderRadius = options.size + 'px';
+    this.button.style.lineHeight = options.size + 'px';
 
     if((/[^a-z]?(android|ipad|iphone|ipod)[^a-z]?/i).test( navigator.userAgent )) {
       this.button.addEventListener('touchstart', function(e){
@@ -111,7 +120,7 @@ window.RadialMenu = (function() {
       e.preventDefault();
     });
     
-    var links = this.node.querySelectorAll('li a');
+    var links = this.element.querySelectorAll('li a');
     for (var i=0; i < links.length; i++) {
       links[i].addEventListener('click', function(e){
         e.preventDefault();
@@ -156,12 +165,14 @@ window.RadialMenu = (function() {
   };
 
   Menu.prototype.close = function(){
-    if(this.isClosed()) return;
-    this.state = 'closed';
-    this.button.style.webkitTransform = 'rotate(0deg)';
-    this.button.style.MozTransform = 'rotate(0deg)';
-    
-    this.eachAnimation(function(animation){
+    var that = this;
+    if(that.isClosed()) {
+      return;
+    }
+    that.state = 'closed';
+    that.button.style.webkitTransform = 'rotate(0deg)';
+    that.button.style.MozTransform = 'rotate(0deg)';
+    that.eachAnimation(function(animation){
       var item = animation[0];
       var closed = animation[2];
       var link = item.querySelector('a');
@@ -170,22 +181,25 @@ window.RadialMenu = (function() {
       link.style.webkitTransform ="rotate(360deg)" ;
       item.style.MozAnimation = '700ms ease 0s normal both 1 ' + closed;
       link.style.MozTransform = "rotate(360deg)";
-      setTimeout(function() {
-        item.classList.remove( 'open' );
-      },600);
-    })
+    });
+    setTimeout(function() {
+      that.element.classList.remove( 'open' );
+    },600);
   };
 
   Menu.prototype.open = function(){
-    if(this.isOpen()) return;
-    this.state = 'open';
-    this.button.style.webkitTransform = 'rotate(-45deg)';
-    this.button.style.MozTransform = 'rotate(-45deg)';
-    this.eachAnimation(function(animation){
+    var that = this;
+    if(that.isOpen()) {
+      return;
+    }
+    that.state = 'open';
+    that.button.style.webkitTransform = 'rotate(-45deg)';
+    that.button.style.MozTransform = 'rotate(-45deg)';
+    that.eachAnimation(function(animation){
       var item = animation[0];
       var open = animation[1];
       var link = item.querySelector('a');
-      item.classList.add( 'open' );
+      that.element.classList.add( 'open' );
       setTimeout(function() {
         item.style.webkitAnimation = open + " 800ms";
         item.style.webkitAnimationFillMode = 'both';

@@ -1,6 +1,6 @@
 {
 	"name": "radial-menu",
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"description": "Radial HTML menu inspired by Path for iOS and Android",
 	"main": [
 		"menu.js",
